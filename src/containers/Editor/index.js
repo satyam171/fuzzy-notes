@@ -5,7 +5,7 @@ import InlineStyleControls from '../../components/InlineStyleControls';
 import BlockStyleControls from '../../components/BlockStyleControls';
 import { Editor, EditorState, RichUtils, getDefaultKeyBinding } from "draft-js";
 
-class RichEditorExample extends React.Component {
+class RichEditor extends React.Component {
   constructor(props) {
     super(props);
     this.state = { editorState: EditorState.createEmpty() };
@@ -107,4 +107,4 @@ function getBlockStyle(block) {
   }
 }
 
-export default RichEditorExample; 
+export default RichEditor; 
