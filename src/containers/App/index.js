@@ -11,7 +11,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
-import {EditorState} from 'draft-js';
+import {Map} from 'immutable'; 
+import {EditorState, convertToRaw} from 'draft-js';
 
 import Editor from '../../components/Editor';
 import { Layout, Menu, Icon, Input, Button } from 'antd';
@@ -65,7 +66,7 @@ class App extends Component{
     // creating the empty state
     let emptyFirstState = {
       title : '', 
-      text  : EditorState.createEmpty()
+      text  : convertToRaw(EditorState.createEmpty().getCurrentContent())
     }
     this.props.dispatch(addNote(emptyFirstState)); 
   }
@@ -167,6 +168,7 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
+    changeEditorState
   };
 }
 
