@@ -10,14 +10,15 @@ import {
   GET_NOTES_ERROR, 
   ADD_NOTE, 
   DELETE_NOTE,
-  CHANGE_SELECTED_KEY
+  CHANGE_SELECTED_KEY,
+  CHANGE_EDITOR_STATE
 } from './constants';
 
 export const initialState = {
   loading: false,
   error: false,
   notes: [],
-  selectedKeys: []
+  selected : {keys : [], index : 0}
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -32,7 +33,8 @@ const appReducer = (state = initialState, action) =>
       case GET_NOTES_SUCCESS:
         draft.loading = false;
         draft.notes = action.notes;
-        draft.selectedKeys = action.notes.length ? [`${action.notes[0].id}`] : []; 
+        draft.selected.keys = action.notes.length ? [`${action.notes[0].id}`] : [];
+        draft.index = 0;  
         draft.error = false; 
         break;
 
@@ -52,8 +54,13 @@ const appReducer = (state = initialState, action) =>
         break; 
 
       case CHANGE_SELECTED_KEY: 
-        draft.selectedKeys = action.selectedKeys;   
-        break; 
+        draft.selected.keys = action.selectedKeys; 
+        draft.selected.index = action.index;  
+        break;
+        
+      // case CHANGE_EDITOR_STATE: 
+      //   draft.notes[action.key]   
+      //   break;  
     }
   });
 

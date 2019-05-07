@@ -18,12 +18,12 @@ import { Layout, Menu, Icon, Input, Button } from 'antd';
 import styles from './styles';
 
 // action imports
-import { searchNotes, addNote, deleteNote, changeSelectedKey } from './actions';
+import { searchNotes, addNote, deleteNote, changeSelected } from './actions';
 import { 
   makeSelectLoading, 
   makeSelectNotes, 
   makeSelectError, 
-  makeSelectSelectedKeys 
+  makeSelectSelected 
 } from './selectors';
 
 const {
@@ -39,6 +39,7 @@ class App extends Component{
     this.state = {search : ''}
     this.handleAdd = this.handleAdd.bind(this); 
     this.handleDelete = this.handleDelete.bind(this); 
+    this.handleSelect = this.handleSelect.bind(this); 
   }
 
   componentDidMount(){
@@ -49,6 +50,15 @@ class App extends Component{
   handleSearch(searchText){
     // contains the search text
     this.props.dispatch(searchNotes(searchText))
+  }
+
+  handleSelect(items){
+    const {notes} = this.props; 
+    let index = 0; 
+    notes.forEach((note,i) => {
+      if(note.id === Number(items.selectedKeys[0])) index = i; 
+    })
+    this.props.dispatch(changeSelected(items.selectedKeys, index)); 
   }
 
   handleAdd(e){
@@ -62,12 +72,12 @@ class App extends Component{
 
   handleDelete(e){
     // send the key of the currently selected note to the action
-    this.props.dispatch(deleteNote(this.props.selectedKeys[0])); 
+    this.props.dispatch(deleteNote(this.props.selected.keys[0])); 
     this.setState({search : ''})
   }
   
   renderMenuList(){
-    const {loading, notes, selectedKeys, error} = this.props;  
+    const {loading, notes, selected, error} = this.props;  
     if(loading) return <div style={styles.AddButtonGroup}>Loading...</div>
     if(error) return <div style={styles.AddButtonGroup}>Error occured !</div>
     if(notes.length){
@@ -75,8 +85,8 @@ class App extends Component{
         <Menu 
           theme="dark" 
           mode="inline" 
-          selectedKeys={selectedKeys} 
-          onSelect={items => this.props.dispatch(changeSelectedKey(items.selectedKeys))}
+          selectedKeys={selected.keys} 
+          onSelect={this.handleSelect}
           style={styles.Menu}
         >
           {notes.map(item=>{
@@ -126,7 +136,10 @@ class App extends Component{
         </Header>
         <Content style={{ margin: '24px 16px 0' }}>
           <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-            <Editor/>
+            <Editor 
+              index={this.props.selected.index}  
+              notes={this.props.notes}
+            />
           </div>
         </Content>
         <Footer style={{ textAlign: 'center' }}>
@@ -145,7 +158,7 @@ App.propTypes = {
 const mapStateToProps = createStructuredSelector({
   loading : makeSelectLoading(), 
   notes : makeSelectNotes(), 
-  selectedKeys : makeSelectSelectedKeys(), 
+  selected : makeSelectSelected(), 
   error : makeSelectError()
 });
 

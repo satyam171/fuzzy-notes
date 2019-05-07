@@ -27,8 +27,14 @@ export function* fetchNotes(action) {
     // Checking for the empty object value, passing an empty array by default 
     if(_.isEmpty(notes)) notes = [];
     // Checking for the condition if only one note was searched
-    if(text) yield put(searchNotesSuccess([notes]));
-    else yield put(searchNotesSuccess(notes));
+    if(text) yield put(searchNotesSuccess([{...notes, index : 0}]));
+    else{
+      notes = notes.map((item, index)=>{
+        item[index] = index; 
+        return item; 
+      })
+      yield put(searchNotesSuccess(notes));
+    } 
   } catch (err) {
     yield put(searchNotesError(err));
   }
@@ -50,10 +56,9 @@ export function* addNote(action) {
   };
   try {
     // Call our request helper (see 'utils/request')
-    let addedNote = yield call(request, requestURL, options);
+    yield call(request, requestURL, options);
     // Make another request for getting all the notes 
-    let notes = yield put(searchNotes());
-    yield put(searchNotesSuccess(notes));
+    yield put(searchNotes());
   } catch (err) {
     yield put(searchNotesError(err));
   }
@@ -70,10 +75,9 @@ export function* deleteNote(action) {
   };
   try {
     // Call our request helper (see 'utils/request')
-    let noteDeleted = yield call(request, requestURL, options);
+    yield call(request, requestURL, options);
     // Make another request for getting all the notes 
-    let notes = yield put(searchNotes()); 
-    yield put(searchNotesSuccess(notes));
+    yield put(searchNotes()); 
   } catch (err) {
     yield put(searchNotesError(err));
   }

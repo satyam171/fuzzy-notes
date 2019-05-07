@@ -12,3 +12,4 @@ export const ADD_NOTE = 'ADD_NOTE';
 export const DELETE_NOTE = 'DELETE_NOTE'
 
 export const CHANGE_SELECTED_KEY = 'CHANGE_SELECTED_KEY'; 
+export const CHANGE_EDITOR_STATE = 'CHANGE_EDITOR_STATE';

@@ -10,7 +10,9 @@ import {
   GET_NOTES_ERROR, 
   ADD_NOTE, 
   DELETE_NOTE, 
-  CHANGE_SELECTED_KEY } from './constants';
+  CHANGE_SELECTED_KEY,
+  CHANGE_EDITOR_STATE
+} from './constants';
 
 /**
  * Load the notes, this action starts the request saga
@@ -55,20 +57,6 @@ export function searchNotesError(error) {
 }
 
 /**
- * Change the selected key 
- * 
- * @param [array] containing the new selected keys
- * 
- * @return {object} An action object with a type of CHANGE_SELECTED_KEY and the new selectedKeys
- */
-export function changeSelectedKey(selectedKeys) {
-  return {
-    type: CHANGE_SELECTED_KEY,
-    selectedKeys
-  };
-}
-
-/**
  * Add Note Actions ########################################
  */
 
@@ -101,5 +89,40 @@ export function deleteNote(id) {
   return {
     type: DELETE_NOTE,
     id
+  };
+}
+
+/**
+ * Other utility functions ###################
+ */
+
+/**
+ * Change the selected key 
+ * 
+ * @param {array} containing the new selected keys
+ * @param {index} containing the selected index
+ * 
+ * @return {object} An action object with a type of CHANGE_SELECTED_KEY and the new selectedKeys and index
+ */
+export function changeSelected(selectedKeys, index) {
+  return {
+    type: CHANGE_SELECTED_KEY,
+    selectedKeys,
+    index
+  };
+}
+
+/**
+ * Change the editor state according to the key 
+ * 
+ * @param {object} containing the key and new editor state 
+ * 
+ * @return {object} An action object with a type of CHANGE_EDITOR_STATE and the update obj
+ * containing the key and new editor state
+ */
+export function changeEditorState(updateObj) {
+  return {
+    type: CHANGE_EDITOR_STATE,
+    updateObj
   };
 }
