@@ -59,7 +59,7 @@ const appReducer = (state = initialState, action) =>
         break;
         
       case CHANGE_EDITOR_STATE: 
-        draft.notes[action.index] = action.updateObj.note;   
+        draft.notes = action.updateObj.notes;   
         break;  
     }
   });

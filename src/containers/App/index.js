@@ -11,7 +11,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
-import {Map} from 'immutable'; 
 import {EditorState, convertToRaw} from 'draft-js';
 
 import Editor from '../../components/Editor';
@@ -140,7 +139,9 @@ class App extends Component{
           <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
             <Editor 
               index={index} 
-              notes={notes} 
+              notes={notes}
+              selected={this.props.selected}
+              dispatch={this.props.dispatch} 
               changeEditorState={this.props.changeEditorState}
             />
           </div>

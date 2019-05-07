@@ -18,25 +18,31 @@ class RichEditor extends React.Component {
   }
 
   componentDidUpdate(prevProps){
-    const {notes} = this.props; 
+    const {notes, selected} = this.props; 
     if((notes.length !== prevProps.notes.length) && notes.length){
+      const contentState = convertFromRaw(notes[this.props.index].text);
+      this.setState({editorState : EditorState.createWithContent(contentState)}) 
+    }
+    if(selected.index !== prevProps.selected.index){
       const contentState = convertFromRaw(notes[this.props.index].text);
       this.setState({editorState : EditorState.createWithContent(contentState)}) 
     }
   }
 
   onChange(editorState){
+    let {notes, index} = this.props; 
     const contentState = convertToRaw(editorState.getCurrentContent());
     let title = ''; 
     const content = contentState.blocks[0].text;
     if(content.length <= 10) title = content;
     else title = `${content.slice(0,10)}...`
-    this.props.changeEditorState({
-      note : {
-        title, editorState : contentState
-      }, 
+    notes[index] = {
+      title, editorState : contentState
+    }; 
+    this.props.dispatch(this.props.changeEditorState({
+      notes, 
       index : this.props.index
-    }); 
+    })); 
     this.setState({editorState});
   }
 
