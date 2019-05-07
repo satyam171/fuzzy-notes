@@ -30,7 +30,7 @@ export function* fetchNotes(action) {
     if(text) yield put(searchNotesSuccess([{...notes, index : 0}]));
     else{
       notes = notes.map((item, index)=>{
-        item[index] = index; 
+        item.index = index; 
         return item; 
       })
       yield put(searchNotesSuccess(notes));

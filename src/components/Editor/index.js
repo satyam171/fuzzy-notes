@@ -1,14 +1,14 @@
-import React from "react";
+import React, {Fragment} from "react";
 import "draft-js/dist/Draft.css";
 import "./RichEditor.css";
 import InlineStyleControls from '../InlineStyleControls';
 import BlockStyleControls from '../BlockStyleControls';
-import Draft ,{ Editor, EditorState, RichUtils, getDefaultKeyBinding } from "draft-js";
+import Draft ,{ Editor, RichUtils, getDefaultKeyBinding } from "draft-js";
 
 class RichEditor extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { editorState: EditorState.createEmpty() };
+    // this.state = { editorState: EditorState.createEmpty() };
     this.focus = () => this.refs.editor.focus();
     this.onChange = this.onChange.bind(this); 
     this.handleKeyCommand = this._handleKeyCommand.bind(this);
@@ -18,8 +18,16 @@ class RichEditor extends React.Component {
   }
 
   onChange(editorState){
-    // console.log(Draft.convertToRaw(editorState.getCurrentContent()));
-    this.setState({editorState});
+    let title = ''; 
+    const content = Draft.convertToRaw(editorState.getCurrentContent()).blocks[0].text;
+    if(content.length <= 10) title = content;
+    else title = `${content.slice(0,10)}...`
+    this.props.changeEditorState({
+      note : {
+        title, editorState
+      }, 
+      index : this.props.index
+    }); 
   }
 
   _handleKeyCommand(command, editorState) {
@@ -56,11 +64,13 @@ class RichEditor extends React.Component {
     );
   }
 
-  render() {
-    const { editorState } = this.state;
+  renderNotes(){
+    const {notes, index} = this.props; 
+    let editorState = notes[index].text; 
     // If the user changes block type before entering any text, we can
     // either style the placeholder or hide it. Let's just hide it now.
     let className = "RichEditor-editor";
+    console.log(editorState);
     var contentState = editorState.getCurrentContent();
     if (!contentState.hasText()) {
       if (
@@ -96,6 +106,15 @@ class RichEditor extends React.Component {
           />
         </div>
       </div>
+    )
+  }
+
+  render() {
+    const { notes } = this.props;
+    return (
+      <Fragment>
+      {notes.length ? this.renderNotes() : <div>Loading...</div>} 
+      </Fragment>
     );
   }
 }

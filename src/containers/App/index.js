@@ -18,7 +18,7 @@ import { Layout, Menu, Icon, Input, Button } from 'antd';
 import styles from './styles';
 
 // action imports
-import { searchNotes, addNote, deleteNote, changeSelected } from './actions';
+import { searchNotes, addNote, deleteNote, changeSelected, changeEditorState } from './actions';
 import { 
   makeSelectLoading, 
   makeSelectNotes, 
@@ -103,6 +103,7 @@ class App extends Component{
   }
 
   render(){
+    const {notes, selected : {index}} = this.props; 
     return (
       <Layout style={styles.Layout}>
       <Sider
@@ -137,8 +138,9 @@ class App extends Component{
         <Content style={{ margin: '24px 16px 0' }}>
           <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
             <Editor 
-              index={this.props.selected.index}  
-              notes={this.props.notes}
+              index={index} 
+              notes={notes} 
+              changeEditorState={this.props.changeEditorState}
             />
           </div>
         </Content>

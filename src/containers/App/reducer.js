@@ -34,7 +34,7 @@ const appReducer = (state = initialState, action) =>
         draft.loading = false;
         draft.notes = action.notes;
         draft.selected.keys = action.notes.length ? [`${action.notes[0].id}`] : [];
-        draft.index = 0;  
+        draft.selected.index = 0;  
         draft.error = false; 
         break;
 
@@ -58,9 +58,9 @@ const appReducer = (state = initialState, action) =>
         draft.selected.index = action.index;  
         break;
         
-      // case CHANGE_EDITOR_STATE: 
-      //   draft.notes[action.key]   
-      //   break;  
+      case CHANGE_EDITOR_STATE: 
+        draft.notes[action.index] = action.updateObj.note;   
+        break;  
     }
   });
 
