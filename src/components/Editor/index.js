@@ -1,21 +1,27 @@
 import React from "react";
 import "draft-js/dist/Draft.css";
 import "./RichEditor.css";
-import InlineStyleControls from '../../components/InlineStyleControls';
-import BlockStyleControls from '../../components/BlockStyleControls';
-import { Editor, EditorState, RichUtils, getDefaultKeyBinding } from "draft-js";
+import InlineStyleControls from '../InlineStyleControls';
+import BlockStyleControls from '../BlockStyleControls';
+import Draft ,{ Editor, EditorState, RichUtils, getDefaultKeyBinding } from "draft-js";
 
 class RichEditor extends React.Component {
   constructor(props) {
     super(props);
     this.state = { editorState: EditorState.createEmpty() };
     this.focus = () => this.refs.editor.focus();
-    this.onChange = editorState => this.setState({ editorState });
+    this.onChange = this.onChange.bind(this); 
     this.handleKeyCommand = this._handleKeyCommand.bind(this);
     this.mapKeyToEditorCommand = this._mapKeyToEditorCommand.bind(this);
     this.toggleBlockType = this._toggleBlockType.bind(this);
     this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
   }
+
+  onChange(editorState){
+    // console.log(Draft.convertToRaw(editorState.getCurrentContent()));
+    this.setState({editorState});
+  }
+
   _handleKeyCommand(command, editorState) {
     const newState = RichUtils.handleKeyCommand(editorState, command);
     if (newState) {
@@ -24,6 +30,7 @@ class RichEditor extends React.Component {
     }
     return false;
   }
+
   _mapKeyToEditorCommand(e) {
     if (e.keyCode === 9 /* TAB */) {
       const newEditorState = RichUtils.onTab(
@@ -38,14 +45,17 @@ class RichEditor extends React.Component {
     }
     return getDefaultKeyBinding(e);
   }
+
   _toggleBlockType(blockType) {
     this.onChange(RichUtils.toggleBlockType(this.state.editorState, blockType));
   }
+
   _toggleInlineStyle(inlineStyle) {
     this.onChange(
       RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle)
     );
   }
+
   render() {
     const { editorState } = this.state;
     // If the user changes block type before entering any text, we can

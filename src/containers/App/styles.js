@@ -15,6 +15,16 @@ const styles = {
         fontSize : 'x-large', 
         fontWeight : '300', 
         marginLeft : '2%'
+    },
+    AddButton : {
+        width : '38%'
+    },
+    SubtractButton : {
+        width : '48%'
+    },
+    AddButtonGroup : {
+        display : 'flex', 
+        justifyContent : 'center'
     }
 }
 

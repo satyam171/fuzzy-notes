@@ -1,5 +1,5 @@
 import React from 'react'; 
-import StyleButton from './StyleButton';
+import StyleButton from '../StyleButton';
 
 var INLINE_STYLES = [
     { label: "Bold", style: "BOLD" },

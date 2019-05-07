@@ -7,7 +7,7 @@ import { connectRouter } from 'connected-react-router';
 
 import history from './utils/history';
 
-import productListingReducer from './containers/ProductListing/reducer';
+import appReducer from './containers/App/reducer'; 
 
 /**
  * Merges the main reducer with the router state and other reducers
@@ -15,7 +15,7 @@ import productListingReducer from './containers/ProductListing/reducer';
 export default function createReducer() {
   const rootReducer = combineReducers({
     router: connectRouter(history),
-    productListingReducer
+    appReducer
   });
 
   return rootReducer;
