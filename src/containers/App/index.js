@@ -6,7 +6,7 @@
  *
  */
 
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types'; 
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -18,8 +18,13 @@ import { Layout, Menu, Icon, Input, Button } from 'antd';
 import styles from './styles';
 
 // action imports
-import { searchNotes } from './actions';
-import { makeSelectLoading, makeSelectNotes, makeSelectError } from './selectors';
+import { searchNotes, addNote, deleteNote, changeSelectedKey } from './actions';
+import { 
+  makeSelectLoading, 
+  makeSelectNotes, 
+  makeSelectError, 
+  makeSelectSelectedKeys 
+} from './selectors';
 
 const {
   Header, Content, Footer, Sider, 
@@ -31,6 +36,8 @@ class App extends Component{
 
   constructor(props){
     super(props);
+    this.handleAdd = this.handleAdd.bind(this); 
+    this.handleDelete = this.handleDelete.bind(this); 
   }
 
   componentDidMount(){
@@ -38,15 +45,46 @@ class App extends Component{
   }
 
   handleAdd(e){
-
+    // creating the empty state
+    let emptyFirstState = {
+      title : '', 
+      text  : EditorState.createEmpty()
+    }
+    this.props.dispatch(addNote(emptyFirstState)); 
   }
 
   handleDelete(e){
-
-  } 
+    // send the key of the currently selected note to the action
+    this.props.dispatch(deleteNote(this.props.selectedKeys[0])); 
+  }
+  
+  renderMenuList(){
+    const {loading, notes, selectedKeys, error} = this.props;  
+    if(loading) return <div style={styles.AddButtonGroup}>Loading...</div>
+    if(error) return <div style={styles.AddButtonGroup}>Error occured !</div>
+    if(notes.length){
+      return (
+        <Menu 
+          theme="dark" 
+          mode="inline" 
+          selectedKeys={selectedKeys} 
+          onSelect={items => this.props.dispatch(changeSelectedKey(items.selectedKeys))}
+          style={styles.Menu}
+        >
+          {notes.map(item=>{
+            return(
+                <Menu.Item key={item.id}>
+                  <Icon type="snippets" />
+                  <span className="nav-text">nav {item.id}</span>
+                </Menu.Item>
+            )
+          })}
+        </Menu>
+      ) 
+    }
+  }
 
   render(){
-    const {notes} = this.props;
     return (
       <Layout style={styles.Layout}>
       <Sider
@@ -72,16 +110,7 @@ class App extends Component{
               DELETE <Icon type="minus" />
             </Button>
         </ButtonGroup>
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={['0']}>
-          {notes.map(item => {
-            return(
-              <Menu.Item key={item.id}>
-                <Icon type="snippets" />
-                <span className="nav-text">nav {item.id}</span>
-              </Menu.Item>
-            )
-          })}
-        </Menu>
+          {this.renderMenuList()}
       </Sider>
       <Layout>
         <Header style={styles.Header}>
@@ -108,6 +137,7 @@ App.propTypes = {
 const mapStateToProps = createStructuredSelector({
   loading : makeSelectLoading(), 
   notes : makeSelectNotes(), 
+  selectedKeys : makeSelectSelectedKeys(), 
   error : makeSelectError()
 });
 

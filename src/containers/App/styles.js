@@ -25,6 +25,9 @@ const styles = {
     AddButtonGroup : {
         display : 'flex', 
         justifyContent : 'center'
+    },
+    Menu : {
+        marginTop : '20px'
     }
 }
 

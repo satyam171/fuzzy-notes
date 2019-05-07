@@ -12,7 +12,13 @@ const makeSelectNotes = () =>
   createSelector(
     selectAppDomain,
     appState => appState.notes,
-  );   
+  );
+
+const makeSelectSelectedKeys = () =>
+  createSelector(
+    selectAppDomain,
+    appState => appState.selectedKeys,
+  );  
 
 const makeSelectError = () =>
   createSelector(
@@ -20,4 +26,4 @@ const makeSelectError = () =>
     appState => appState.error,
   ); 
 
-export { makeSelectLoading, makeSelectNotes, makeSelectError };
+export { makeSelectLoading, makeSelectNotes, makeSelectError, makeSelectSelectedKeys };
