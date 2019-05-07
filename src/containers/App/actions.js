@@ -13,13 +13,16 @@ import {
   CHANGE_SELECTED_KEY } from './constants';
 
 /**
- * Load the repositories, this action starts the request saga
+ * Load the notes, this action starts the request saga
+ * 
+ * @param {string} containing the search text
  * 
  * @return {object} An action object with a type of GET_NOTES
  */
-export function searchNotes() {
+export function searchNotes(text) {
   return {
     type: GET_NOTES,
+    text
   };
 }
 

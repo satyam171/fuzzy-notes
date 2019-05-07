@@ -9,20 +9,26 @@ import { searchNotes, searchNotesSuccess, searchNotesError } from './actions';
 
 import request from '../../utils/request';
 
-
-
 /**
  * Add Note request/response handler
  */
 
-export function* fetchNotes() {
-  const requestURL = `http://localhost:8000/notes`;
+export function* fetchNotes(action) {
+  /**
+   * If a falsy value '' comes in text, then all the notes will be searched,
+   * otherwise all the notes will be searched
+   */
+  const {text} = action; 
+  const specificNote = text ? `/${text}` : '';
+  const requestURL = `http://localhost:8000/notes${specificNote}`;
   try {
     // Call our request helper (see 'utils/request')
     let notes = yield call(request, requestURL);
     // Checking for the empty object value, passing an empty array by default 
     if(_.isEmpty(notes)) notes = [];
-    yield put(searchNotesSuccess(notes));
+    // Checking for the condition if only one note was searched
+    if(text) yield put(searchNotesSuccess([notes]));
+    else yield put(searchNotesSuccess(notes));
   } catch (err) {
     yield put(searchNotesError(err));
   }

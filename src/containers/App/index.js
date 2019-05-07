@@ -36,12 +36,19 @@ class App extends Component{
 
   constructor(props){
     super(props);
+    this.state = {search : ''}
     this.handleAdd = this.handleAdd.bind(this); 
     this.handleDelete = this.handleDelete.bind(this); 
   }
 
   componentDidMount(){
-    this.props.dispatch(searchNotes());
+    // call the request with empty string
+    this.props.dispatch(searchNotes(this.state.search));
+  }
+
+  handleSearch(searchText){
+    // contains the search text
+    this.props.dispatch(searchNotes(searchText))
   }
 
   handleAdd(e){
@@ -56,6 +63,7 @@ class App extends Component{
   handleDelete(e){
     // send the key of the currently selected note to the action
     this.props.dispatch(deleteNote(this.props.selectedKeys[0])); 
+    this.setState({search : ''})
   }
   
   renderMenuList(){
@@ -95,11 +103,11 @@ class App extends Component{
       >
         <Search
           placeholder="Search Notes"
-          // value={search ? search : null}
-          // onSearch={val => this.handleFilter(val, 'search')}
-          // onChange={(e) => this.setState({search : e.target.value})}
-          // onPressEnter={e => this.handleFilter(e.target.value, 'search')}
-          // enterButton
+          value={this.state.search ? this.state.search : ''}
+          onSearch={val => this.handleSearch(val)}
+          onChange={(e) => this.setState({search : e.target.value})}
+          onPressEnter={e => this.handleSearch(e.target.value)}
+          enterButton
           style={styles.Search}
         />
         <ButtonGroup style={styles.AddButtonGroup}>
