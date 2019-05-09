@@ -75,6 +75,7 @@ class App extends Component{
       text  : convertToRaw(EditorState.createEmpty().getCurrentContent())
     }
     this.props.dispatch(addNote(emptyFirstState)); 
+    this.setState({search : ''})
   }
 
   handleDelete(e){
