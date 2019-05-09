@@ -1,6 +1,7 @@
 import React, {Fragment} from "react";
 import "draft-js/dist/Draft.css";
 import "./RichEditor.css";
+import {debounce} from 'lodash'; 
 import InlineStyleControls from '../InlineStyleControls';
 import BlockStyleControls from '../BlockStyleControls';
 import { Editor, EditorState, convertFromRaw, convertToRaw, RichUtils, getDefaultKeyBinding } from "draft-js";
@@ -15,6 +16,7 @@ class RichEditor extends React.Component {
     this.mapKeyToEditorCommand = this._mapKeyToEditorCommand.bind(this);
     this.toggleBlockType = this._toggleBlockType.bind(this);
     this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
+    this.savingDebounced = debounce(this.save, 700); 
   }
 
   componentDidUpdate(prevProps){
@@ -36,7 +38,6 @@ class RichEditor extends React.Component {
     const content = contentState.blocks[0].text;
     if(content.length <= 10) title = content;
     else title = `${content.slice(0,10)}...`; 
-    notes = [...notes]
     notes[index] = {
       ...notes[index], title, text : contentState
     }; 
@@ -44,7 +45,15 @@ class RichEditor extends React.Component {
       notes, 
       index : this.props.index
     })); 
-    this.setState({editorState});
+    this.setState({editorState}, ()=>{
+      this.savingDebounced(); 
+    }); 
+  }
+
+  save(){
+    let {notes, selected} = this.props;  
+    // call some action for the put api call 
+    this.props.dispatch(this.props.saveNote(notes, selected))  
   }
 
   _handleKeyCommand(command, editorState) {
@@ -114,6 +123,7 @@ class RichEditor extends React.Component {
             editorState={editorState}
             handleKeyCommand={this.handleKeyCommand}
             keyBindingFn={this.mapKeyToEditorCommand}
+            onKeyDown={(e)=>console.log(e)}
             onChange={this.onChange}
             placeholder="Tell a story..."
             ref="editor"

@@ -18,7 +18,14 @@ import { Layout, Menu, Icon, Input, Button } from 'antd';
 import styles from './styles';
 
 // action imports
-import { searchNotes, addNote, deleteNote, changeSelected, changeEditorState } from './actions';
+import { 
+  searchNotes, 
+  addNote, 
+  deleteNote, 
+  changeSelected, 
+  changeEditorState ,
+  saveNote
+} from './actions';
 import { 
   makeSelectLoading, 
   makeSelectNotes, 
@@ -143,6 +150,7 @@ class App extends Component{
               selected={this.props.selected}
               dispatch={this.props.dispatch} 
               changeEditorState={this.props.changeEditorState}
+              saveNote={this.props.saveNote}
             />
           </div>
         </Content>
@@ -169,7 +177,8 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
-    changeEditorState
+    changeEditorState,
+    saveNote
   };
 }
 

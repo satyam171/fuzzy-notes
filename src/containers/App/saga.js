@@ -3,9 +3,15 @@
  */
  
 import _ from 'lodash';  
-import { call, put, takeLatest } from 'redux-saga/effects';
-import { GET_NOTES, ADD_NOTE, DELETE_NOTE } from './constants';
-import { searchNotes, searchNotesSuccess, searchNotesError } from './actions';
+import { call, put, takeLatest, select } from 'redux-saga/effects';
+import { GET_NOTES, ADD_NOTE, SAVE_NOTE, DELETE_NOTE } from './constants';
+import { 
+  searchNotes, 
+  searchNotesSuccess, 
+  searchNotesError,
+  saveNoteSuccess,
+  saveNoteError 
+} from './actions';
 
 import request from '../../utils/request';
 
@@ -41,7 +47,7 @@ export function* fetchNotes(action) {
 }
 
 /**
- * Delete Note request/response handler
+ * Add Note request/response handler
  */
 
 export function* addNote(action) {
@@ -63,6 +69,35 @@ export function* addNote(action) {
     yield put(searchNotesError(err));
   }
 }
+/**
+ * Save Note request/response handler
+ */
+
+export function* saveNote(action) {
+  let {selected : {keys, index}, notes} = action; 
+  const requestURL = `http://localhost:8000/notes/${Number(keys[0])}`;
+  const options = {
+    method: 'PUT', // *GET, POST, PUT, DELETE, etc.
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: '*/*',
+    },
+    body: JSON.stringify(notes[index]),
+  };
+  try {
+    // Call our request helper (see 'utils/request')
+    let savedNote = yield call(request, requestURL, options);
+    notes[index] = savedNote; 
+    // Make another request for getting all the notes 
+    yield put(saveNoteSuccess(notes));
+  } catch (err) {
+    yield put(saveNoteError(err));
+  }
+}
+
+/**
+ * Delete Note request/response handler
+ */
 
 export function* deleteNote(action) {
   const requestURL = `http://localhost:8000/notes/${action.id}`;
@@ -90,5 +125,6 @@ export default function* intiateNotesFetch() {
   // Watches for GET_NOTES actions and calls fetchNotes
   yield takeLatest(GET_NOTES, fetchNotes);
   yield takeLatest(ADD_NOTE, addNote);
+  yield takeLatest(SAVE_NOTE, saveNote);
   yield takeLatest(DELETE_NOTE, deleteNote);
 }
