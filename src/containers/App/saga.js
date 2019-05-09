@@ -3,7 +3,7 @@
  */
  
 import _ from 'lodash';  
-import { call, put, takeLatest, select } from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
 import { GET_NOTES, ADD_NOTE, SAVE_NOTE, DELETE_NOTE } from './constants';
 import { 
   searchNotes, 
@@ -26,7 +26,7 @@ export function* fetchNotes(action) {
    */
   const {text} = action; 
   const specificNote = text ? `/${text}` : '';
-  const requestURL = `http://localhost:8000/notes${specificNote}`;
+  const requestURL = `https://notes-json-server.herokuapp.com/notes${specificNote}`;
   try {
     // Call our request helper (see 'utils/request')
     let notes = yield call(request, requestURL);
@@ -51,7 +51,7 @@ export function* fetchNotes(action) {
  */
 
 export function* addNote(action) {
-  const requestURL = `http://localhost:8000/notes`;
+  const requestURL = `https://notes-json-server.herokuapp.com/notes`;
   const options = {
     method: 'POST', // *GET, POST, PUT, DELETE, etc.
     headers: {
@@ -75,7 +75,7 @@ export function* addNote(action) {
 
 export function* saveNote(action) {
   let {selected : {keys, index}, notes} = action; 
-  const requestURL = `http://localhost:8000/notes/${Number(keys[0])}`;
+  const requestURL = `https://notes-json-server.herokuapp.com/notes/${Number(keys[0])}`;
   const options = {
     method: 'PUT', // *GET, POST, PUT, DELETE, etc.
     headers: {
@@ -100,7 +100,7 @@ export function* saveNote(action) {
  */
 
 export function* deleteNote(action) {
-  const requestURL = `http://localhost:8000/notes/${action.id}`;
+  const requestURL = `https://notes-json-server.herokuapp.com/notes/${action.id}`;
   const options = {
     method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
     headers: {
