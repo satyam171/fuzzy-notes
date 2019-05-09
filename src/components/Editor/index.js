@@ -35,9 +35,10 @@ class RichEditor extends React.Component {
     let title = ''; 
     const content = contentState.blocks[0].text;
     if(content.length <= 10) title = content;
-    else title = `${content.slice(0,10)}...`
+    else title = `${content.slice(0,10)}...`; 
+    notes = [...notes]
     notes[index] = {
-      title, editorState : contentState
+      ...notes[index], title, text : contentState
     }; 
     this.props.dispatch(this.props.changeEditorState({
       notes, 

@@ -54,7 +54,7 @@ class App extends Component{
 
   handleSelect(items){
     const {notes} = this.props; 
-    let index = 0; 
+    let index = 0;
     notes.forEach((note,i) => {
       if(note.id === Number(items.selectedKeys[0])) index = i; 
     })
@@ -93,7 +93,7 @@ class App extends Component{
             return(
                 <Menu.Item key={item.id}>
                   <Icon type="snippets" />
-                  <span className="nav-text">nav {item.id}</span>
+                  <span className="nav-text">{item.id} - {item.title}</span>
                 </Menu.Item>
             )
           })}
